@@ -17,6 +17,7 @@ class DefineRouter extends React.Component {
                 <Route path = {"/directory"} component={Directory}></Route>
                 <Route path = {"/oppurtunities"} component={Oppurtunities}></Route>
                 <Route path = {"/info"} component = {Info}></Route>
+                
 
             </Router>
         )
