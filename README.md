@@ -1,1 +1,1 @@
-# JC-Frontend
+# JC Frontend
