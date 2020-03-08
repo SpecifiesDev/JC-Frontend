@@ -1,29 +1,26 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import { Navbar, Nav} from 'react-bootstrap';
+
+
+import {BrowserRouter as Router, Route} from 'react-router-dom';
+
+import {Directory} from './Components/Directory.js';
+import {Oppurtunities} from './Components/Oppurtunities.js';
+import {Info} from './Components/Info.js';
 
 
 
-
-class App extends React.Component {
+class DefineRouter extends React.Component {
     render() {
         return(
-            <Navbar bg="dark" variant="dark">
-            {/* We can pull images from master/WebApp at a later time */}
-            <Navbar.Brand>Jackson Connect</Navbar.Brand>
-            <Nav className="mr-auto">
+            <Router>
+                <Route path = {"/directory"} component={Directory}></Route>
+                <Route path = {"/oppurtunities"} component={Oppurtunities}></Route>
+                <Route path = {"/info"} component = {Info}></Route>
 
-                {/* I'll set up page routing */}
-                <Nav.Link>Directory</Nav.Link>
-
-                <Nav.Link>Oppurtunities</Nav.Link>
-                
-            
-            </Nav>
-          </Navbar>
+            </Router>
         )
     }
 }
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<DefineRouter/>, document.getElementById("root"));
