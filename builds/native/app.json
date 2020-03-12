@@ -1,0 +1,21 @@
+{
+    "expo": {
+        "name": "Jackson Connect",
+        "icon": "./assets/icon.png",
+        "version": "1.0.0",
+        "slug": "native",
+        "sdkVersion": "36.0.0",
+        "platforms": [
+            "ios",
+            "android"
+        ],
+        "android": {
+            "package": "me.specifies.jacksonconnect",
+            "versionCode": 1
+        },
+        "ios": {
+            "bundleIdentifier": "com.specifies.jacksonconnect",
+            "buildNumber": "1.0.0"
+        }
+    }
+}
