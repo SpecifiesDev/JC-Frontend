@@ -3,6 +3,8 @@
 /.pnp
 .pnp.js
 
+builds/web/node_modules/*
+
 # testing
 /coverage
 
