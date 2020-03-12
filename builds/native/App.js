@@ -9,8 +9,9 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 import HomeScreen from './components/HomeScreen.js';
 import Directory from './components/Directory.js';
-
 import CustomHeader from './components/CustomHeader.js';
+
+
 
 const Stack = createStackNavigator();
 
@@ -33,7 +34,9 @@ export default class App extends React.Component {
             name = "Directory" 
             component = {Directory}
             options = {{
-              headerTitle: <CustomHeader title = "Test2"/>
+              headerTitle: <CustomHeader title = "Test2"/>,
+              headerLeft: null,
+              gesturesEnabled: true
             }}
           />
         </Stack.Navigator>
