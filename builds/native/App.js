@@ -9,7 +9,6 @@ import {createStackNavigator} from '@react-navigation/stack';
 
 import HomeScreen from './components/HomeScreen.js';
 import Directory from './components/Directory.js';
-
 import CustomHeader from './components/CustomHeader.js';
 
 const Stack = createStackNavigator();
