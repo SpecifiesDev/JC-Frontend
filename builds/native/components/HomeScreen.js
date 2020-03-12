@@ -13,7 +13,7 @@ const styles = StyleSheet.create({
 
 export default class HomeScreen extends Component {
 
-
+    
 
     render() {
         return(
@@ -21,7 +21,6 @@ export default class HomeScreen extends Component {
             <View style = {styles}>
                 <Text>Navigation setup</Text>
                 <Button title = "Directory" onPress = {() => {this.props.navigation.navigate('Directory');}}></Button>
-
             </View>
         </ErrorBoundary>
         )

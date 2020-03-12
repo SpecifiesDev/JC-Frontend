@@ -1,7 +1,7 @@
 import 'react-native-gesture-handler';
 
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { Button } from 'react-native';
 
 import {NavigationContainer} from '@react-navigation/native';
 
@@ -15,9 +15,26 @@ import CustomHeader from './components/CustomHeader.js';
 
 const Stack = createStackNavigator();
 
+const homeNavigationOptions = {
+  headerTitle: <CustomHeader title = "Home"/>,
+  headerRight: () => (
+    // We'll make this a dropdown later, I'm just creating the logic
+    <Button onPress = {() => console.log("Pressed")} title = "Directory"/>
+  ),
+}
 
+const directoryNavigationOptions = {
+  headerTitle: <CustomHeader title = "Directory"/>,
+  headerLeft: null,
+  gesturesEnabled: true,
+  headerRight: () => (
+    <Button onPress = {() => console.log("Pressed")} title = "Home"/>
+  ),
+}
 
 export default class App extends React.Component {
+
+
   render() {
     return (
       <NavigationContainer>
@@ -25,19 +42,13 @@ export default class App extends React.Component {
           <Stack.Screen
             name = "Home"
             component = {HomeScreen}
-            options = {{
-              headerTitle: <CustomHeader title = "Test"/>
-            }}
+            options = {homeNavigationOptions}
           />
 
           <Stack.Screen 
             name = "Directory" 
             component = {Directory}
-            options = {{
-              headerTitle: <CustomHeader title = "Test2"/>,
-              headerLeft: null,
-              gesturesEnabled: true
-            }}
+            options = {directoryNavigationOptions}
           />
         </Stack.Navigator>
       </NavigationContainer>
