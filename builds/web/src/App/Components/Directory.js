@@ -18,8 +18,12 @@ export class Directory extends React.Component{
 
         //Setup App Variables
         window.App = {
-            "OrgData" : null
+            "OrgData" : null,
+            "SelectedTags" : null
         }
+
+        this.SearchBox = null;
+        this.ResultsBox = null;
 
         //Setup listener for Directory Request | Push data into global state
         this.Load = (Request) => {
@@ -52,8 +56,8 @@ export class Directory extends React.Component{
         if(this.state.loading == false){
             return(
                 <div className="h-100" style={{display: "flex", textAlign: "center"}}>
-                    <SearchBox style={{width: "25%", backgroundColor: "#28a745"}}/>
-                    <ResultsBox style={{width: "75%", backgroundColor: "#20c997"}}/>
+                    <SearchBox  Parent={this} style={{width: "25%", backgroundColor: "#28a745"}}/>
+                    <ResultsBox Parent={this} style={{width: "75%", backgroundColor: "#20c997"}}/>
                 </div>
             )
         }

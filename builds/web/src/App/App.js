@@ -16,6 +16,7 @@ export class App extends React.Component{
     document.body.parentElement.style.height = "100%";
     document.body.style.height = "100%";
     document.getElementById("root").style.height = "100%";
+    document.getElementById("root").style.overflow = "hidden";
   }
 
   render(){
