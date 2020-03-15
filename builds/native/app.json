@@ -1,21 +1,31 @@
 {
-    "expo": {
-        "name": "Jackson Connect",
-        "icon": "./assets/icon.png",
-        "version": "1.0.0",
-        "slug": "native",
-        "sdkVersion": "36.0.0",
-        "platforms": [
-            "ios",
-            "android"
-        ],
-        "android": {
-            "package": "me.specifies.jacksonconnect",
-            "versionCode": 1
-        },
-        "ios": {
-            "bundleIdentifier": "com.specifies.jacksonconnect",
-            "buildNumber": "1.0.0"
-        }
+  "expo": {
+    "name": "Tab Navigation Template",
+    "slug": "test",
+    "privacy": "public",
+    "sdkVersion": "36.0.0",
+    "platforms": [
+      "ios",
+      "android",
+      "web"
+    ],
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/images/icon.png",
+    "scheme": "myapp",
+    "splash": {
+      "image": "./assets/images/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "updates": {
+      "fallbackToCacheTimeout": 0
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
     }
+  }
 }
