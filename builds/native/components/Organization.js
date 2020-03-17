@@ -33,14 +33,15 @@ export class Organization extends React.Component {
   
     
     }
-  
+    testLog() {
+      console.log("test');")
+    }
     setModalVisible() {
       this.setState({ rowColor: this.state.rowColor, modalVisible: true, website: this.state.website,  websiteStyle: this.state.websiteStyle, websitePress: this.state.websitePress });
     }
   
     render() {
       return(
-  
         <React.Fragment>
             <Modal
                 isVisible = {this.state.modalVisible}
@@ -77,7 +78,7 @@ export class Organization extends React.Component {
                 <View style={styles.optionIconContainer}>
                   <Ionicons name={this.props.icon} size={22} color="rgba(0,0,0,0.35)" />
                 </View>
-                <View style={styles.optionTextContainer}>
+                <View>
                   <Text style={styles.optionText}>{this.props.name}</Text>
                 </View>
               </View>
