@@ -60,16 +60,16 @@ export default function PostsScreen(props) {
                         setPostLoading(true);
                         setElementData(elementData.concat(await getData(page)));
                         setPostLoading(false);
+
+                        
                     }
                 }}
                 onEndReachedThreshold = {0}
                 ListFooterComponent = {renderFooter(postLoading)}
-                refreshing = {isRefreshing}
                 onRefresh = {async () => {
                     setIsRefreshing(true);
-                    // handleRefresh();
                     await setPage(0);
-                    setElementData(await getData(page));
+                    await setElementData(await getRefreshData());
                     setIsRefreshing(false);
                 }}
             />
@@ -99,6 +99,25 @@ getData = async (p) => {
     return temp;
 }
 
+getRefreshData = async () => {
+    let response = await axios.get('http://54.208.109.135/posts?filter=1&amount=20').catch(err => {console.log(err)});
+
+    response = JSON.parse(JSON.stringify(response.data));
+
+    let arr = [];
+
+    for(let x = 0; x < response['result'].length; x++) {
+        let post = response['result'][x];
+        arr.push({
+            orgName: post['organization-name'],
+            title: post['title'],
+            desc: post['description']
+        })
+    }
+
+    return arr;
+}
+
 
 renderRow = ({item}) => {
     return (
@@ -115,14 +134,7 @@ renderFooter = (loading) => {
     )
 }
 
-handleRefresh = async () => {
-    let tempPostAmount = await axios.get('http://54.208.109.135/postamount?filter=1').catch((error) => console.warn(error));
 
-    if (tempPostAmount != postAmount){
-        postAmount = tempPostAmount;
-        maxPage = Math.ceil(postAmount / PER_PAGE);
-    }
-}
 
 
 const styles = StyleSheet.create({
