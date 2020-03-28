@@ -52,6 +52,7 @@ export default function PostsScreen(props) {
                 style = {styles.container} 
                 data = {elementData}
                 renderItem = {renderRow}
+                refreshing = {isRefreshing}
                 keyExtractor = {(item, index) => index.toString()}
                 onEndReached = {async () => {
                     if(!(page >= maxPage) && !isRefreshing){
