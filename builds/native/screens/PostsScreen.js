@@ -1,150 +1,114 @@
 import React from 'react';
-import { StyleSheet, ActivityIndicator, View, Text, FlatList } from 'react-native';
+import {Text, View, StyleSheet, FlatList, ActivityIndicator} from 'react-native';
 import { SplashScreen } from 'expo';
 import { Post } from '../components/Post';
 
-
-const axios = require('axios');
-
 const PER_PAGE = 20;
 
-let maxPage = 20; // temp maxPage
-let postAmount = 97;
+export default class PostsScreen extends React.Component {
+    constructor(props) {
+        super(props);
 
+        this.state = {
+            loading: false,
+            page: 0,
+            refreshing: false,
+            data: []
+        };
 
-export default function PostsScreen(props) {
+    }
 
-    const [isLoadingComplete, setLoadingComplete] = React.useState(false);
-    const [elementData, setElementData] = React.useState([]);
-    const [page, setPage] = React.useState(0);
-    const [postLoading, setPostLoading] = React.useState(false);
-    const [isRefreshing, setIsRefreshing] = React.useState(false);
-
-    React.useEffect(() => {
-        async function loadResourcesAndDataAsync() {
-            try {
-              SplashScreen.preventAutoHide();
-
-              setElementData(await getData(page));
-              // postAmount = await axios.get('http://54.208.109.135/postamount?filter=1').catch((error) => console.warn(error));
-              // maxPage = Math.ceil(postAmount / PER_PAGE);
-
-            } catch (e) {
-              
-              console.warn(e);
-            } finally {
-              setLoadingComplete(true);
-              SplashScreen.hide();
-            }
-          }
+    componentDidMount() {
+        SplashScreen.preventAutoHide();
       
-          loadResourcesAndDataAsync();
-    }, []);
+        this.getData();
 
-    if(!isLoadingComplete && !props.skipLoadingScreen) {
+        SplashScreen.hide();
+    }
+
+
+    getData = () => {
+        const { page } = this.state;
+
+        let offset = (page * PER_PAGE).toString();
+
+        const url = 'http://54.208.109.135/posts?filter=1&amount=' + PER_PAGE + '&offset=' + offset;
+
+        this.setState({ loading: true });
+
+        fetch(url)
+            .then(res => res.json())
+            .then(res => {
+                this.setState({
+                    data: page == 0 ? res.result : this.state.data.concat(res.result),
+                    loading: false,
+                    refreshing: false
+                })
+            })
+            .catch(err => {
+                console.warn(err);
+                this.setState({refreshing: false, loading: false})
+            })
+    }
+
+    renderSeparator = () => {
         return (
-            <ActivityIndicator style = {styles.spinnerStyle} size = "large" color = "#93ab99"/>
-        );
-    } else {
-    
+            <View style={styles.separator} />
+        )
+    }
+
+    renderFooter = () => {
+        if(!this.state.loading) return null;
+
         return (
-            <FlatList 
-                style = {styles.container} 
-                data = {elementData}
-                renderItem = {renderRow}
-                refreshing = {isRefreshing}
-                keyExtractor = {(item, index) => index.toString()}
-                onEndReached = {async () => {
-                    if(!(page >= maxPage) && !isRefreshing){
-                        await setPage(page + 1);
-                        setPostLoading(true);
-                        setElementData(elementData.concat(await getData(page)));
-                        setPostLoading(false);
-
-                        
-                    }
-                }}
-                onEndReachedThreshold = {0}
-                ListFooterComponent = {renderFooter(postLoading)}
-                onRefresh = {async () => {
-                    setIsRefreshing(true);
-                    await setPage(0);
-                    await setElementData(await getRefreshData());
-                    setIsRefreshing(false);
-                }}
-            />
-        );
-    }
-}
-
-getData = async (p) => {
-    // Load the organization data to display
-
-    let offset = (p * PER_PAGE).toString();
-
-    let response = await axios.get('http://54.208.109.135/posts?offset=' + offset + '&amount=' + PER_PAGE + '&filter=1').catch((error) => console.warn(error));
-
-    response = JSON.parse(JSON.stringify(response.data));
-
-    let temp = [];
-    
-    for(let x = 0; x < response['result'].length; x++) {
-        let post = response['result'][x];
-
-        temp.push({orgName: post['organization-name'], 
-                   title: post['title'],
-                   desc: post['description']});
+            <View style={styles.footer}>
+                <ActivityIndicator size = "large" color = "#93ab99" />
+            </View>
+        )
     }
 
-    return temp;
-}
-
-getRefreshData = async () => {
-    let response = await axios.get('http://54.208.109.135/posts?filter=1&amount=20').catch(err => {console.log(err)});
-
-    response = JSON.parse(JSON.stringify(response.data));
-
-    let arr = [];
-
-    for(let x = 0; x < response['result'].length; x++) {
-        let post = response['result'][x];
-        arr.push({
-            orgName: post['organization-name'],
-            title: post['title'],
-            desc: post['description']
-        })
+    handleRefresh = () => {
+        this.setState({
+            page: 0,
+            refreshing: true
+        }, () => this.getData());
     }
 
-    return arr;
+    handleLoadMore = () => {
+        this.setState({
+            loading: true,
+            page: this.state.page + 1,
+        }, () => this.getData());
+    }
+
+    render(){
+        return (
+            <View>
+                <FlatList 
+                    data={this.state.data}
+                    renderItem={({ item }) => (
+                        <Post orgName={item['organization-name']} title={item.title} />
+                    )}
+                    keyExtractor={(item) => item.UUID}
+                    ItemSeparatorComponent={this.renderSeparator}
+                    ListFooterComponent={this.renderFooter}
+                    refreshing={this.state.refreshing}
+                    onRefresh={this.handleRefresh}
+                    onEndReached={this.handleLoadMore}
+                    onEndReachedThreshold={0}
+                />
+            </View>
+        )
+    }
+
 }
-
-
-renderRow = ({item}) => {
-    return (
-        <Post orgName = {item.orgName} title = {item.title} desc = {item.desc} key = {item.key}/>
-    )
-}
-
-renderFooter = (loading) => {
-    return (
-        loading ?
-        <View style={styles.loader}>
-            <ActivityIndicator size="large" />
-        </View> : null
-    )
-}
-
-
-
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        backgroundColor: '#fafafa',
-        paddingTop: 5
+    separator: {
+        padding: 10
     },
-    loader: {
-        marginTop: 10,
-        alignItems: 'center'
+    
+    footer: {
+        paddingVertical: 20
     }
 });
