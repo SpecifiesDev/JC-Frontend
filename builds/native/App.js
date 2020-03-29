@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Platform, StatusBar, StyleSheet, SafeAreaView } from 'react-native';
+import { StatusBar, StyleSheet, SafeAreaView, View } from 'react-native';
 import { SplashScreen } from 'expo';
 import * as Font from 'expo-font';
 import { Ionicons } from '@expo/vector-icons';
@@ -48,21 +48,29 @@ export default function App(props) {
     return null;
   } else {
     return (
-      <SafeAreaView style={styles.container}>
-        {Platform.OS === 'ios' && <StatusBar barStyle="default" />}
-        <NavigationContainer ref={containerRef} initialState={initialNavigationState}>
-          <Stack.Navigator>
-            <Stack.Screen name="Root" component={BottomTabNavigator} />
-          </Stack.Navigator>
-        </NavigationContainer>
-      </SafeAreaView>
+      <React.Fragment>
+        <SafeAreaView style={styles.topStatus}>
+          <StatusBar barStyle="default" />
+        </SafeAreaView>
+        <SafeAreaView style={styles.bottomStatus}>
+          <NavigationContainer ref={containerRef} initialState={initialNavigationState}>
+            <Stack.Navigator>
+              <Stack.Screen name="Root" component={BottomTabNavigator} />
+            </Stack.Navigator>
+          </NavigationContainer>
+        </SafeAreaView>
+      </React.Fragment>
     );
   }
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
+  topStatus: {
+    flex: 0,
     backgroundColor: color.tintColor
   },
+  bottomStatus: {
+    flex: 1,
+    backgroundColor: color.tabBar
+  }
 });
