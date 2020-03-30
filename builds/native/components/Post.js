@@ -17,8 +17,8 @@ export class Post extends React.Component {
             
             <View style = {{flexDirection: 'row'}}>
                 <View>
-                    <Text style={styles.optionText}>Org: {this.props.orgName}</Text>
-                    <Text style={styles.optionText}>    Title: {this.props.title}</Text>
+                    <Text style={styles.optionText}>Title: {this.props.title}</Text>
+                    <Text style={styles.optionText}>    orgName: {this.props.orgName}</Text>
                 </View>
             </View>
   
