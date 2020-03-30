@@ -1,8 +1,7 @@
 import React from 'react';
-import { View, StyleSheet, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
+import {Text, View, StyleSheet, FlatList, ActivityIndicator} from 'react-native';
 import { SplashScreen } from 'expo';
 import { Post } from '../components/Post';
-import Card from '../components/Card';
 
 const PER_PAGE = 20;
 
@@ -84,17 +83,11 @@ export default class PostsScreen extends React.Component {
 
     render(){
         return (
-            <View style={styles.list}>
-                <FlatList
+            <View>
+                <FlatList 
                     data={this.state.data}
                     renderItem={({ item }) => (
-                        <View style={styles.listCard}>
-                            <TouchableOpacity onPress={() => this.props.navigation.navigate('Details', item)}>
-                                <Card>
-                                    <Post orgName={item['organization-name']} title={item.title} />
-                                </Card>
-                            </TouchableOpacity>
-                        </View>
+                        <Post orgName={item['organization-name']} title={item.title} />
                     )}
                     keyExtractor={(item) => item.UUID}
                     ItemSeparatorComponent={this.renderSeparator}
@@ -117,10 +110,5 @@ const styles = StyleSheet.create({
     
     footer: {
         paddingVertical: 20
-    },
-
-    listCard: {
-        flex: 1,
-        marginHorizontal: '10%'
     }
 });
