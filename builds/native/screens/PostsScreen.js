@@ -102,7 +102,7 @@ export default class PostsScreen extends React.Component {
                     refreshing={this.state.refreshing}
                     onRefresh={this.handleRefresh}
                     onEndReached={this.handleLoadMore}
-                    onEndReachedThreshold={0}
+                    onEndReachedThreshold={0.1}
                 />
             </View>
         )
