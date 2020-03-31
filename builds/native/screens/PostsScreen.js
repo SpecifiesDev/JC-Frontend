@@ -91,7 +91,7 @@ export default class PostsScreen extends React.Component {
                         <View style={styles.listCard}>
                             <TouchableOpacity onPress={() => this.props.navigation.navigate('Details', item)}>
                                 <Card>
-                                    <Post orgName={item['organization-name']} title={item.title} />
+                                    <Post orgName={item['organization-name']} title={item.title} creationDate = {getDate(item['creation-date'])} desc = {safeDescription(item['description'])} />
                                 </Card>
                             </TouchableOpacity>
                         </View>
@@ -108,6 +108,22 @@ export default class PostsScreen extends React.Component {
         )
     }
 
+}
+
+function getDate(dateString) {
+    let firstSplit = dateString.split(" ");
+
+    let dataArray = firstSplit[0].split("-");
+
+    return `${dataArray[1]}/${dataArray[2]}/${dataArray[0]}`;
+}
+
+function safeDescription(desc) {
+    if(desc.length <= 32) {
+        return desc;
+    } else {
+        return `${desc.substring(0, 32)}...`;
+    }
 }
 
 const styles = StyleSheet.create({
