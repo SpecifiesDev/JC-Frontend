@@ -17,8 +17,11 @@ export class Post extends React.Component {
             
             <View style = {{flexDirection: 'row'}}>
                 <View>
-                    <Text style={styles.optionText}>Org: {this.props.orgName}</Text>
-                    <Text style={styles.optionText}>    Title: {this.props.title}</Text>
+                    <Text style={styles.optionText}>{this.props.title}</Text>
+                    <Text>{this.props.desc}</Text>
+                      <Text style={[styles.optionText, styles.name]}>{this.props.orgName}</Text>
+                      <Text style = {[styles.date]}>{this.props.creationDate}</Text>
+                    
                 </View>
             </View>
   
@@ -33,5 +36,14 @@ export class Post extends React.Component {
         fontSize: 15,
         alignSelf: 'flex-start',
         marginTop: 1
+      },
+      name: {
+        paddingTop: 40,
+        fontSize: 10,
+        fontWeight: 'bold'
+      },
+      date: {
+        fontSize: 7,
+        
       }
   })

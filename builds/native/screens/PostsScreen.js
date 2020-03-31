@@ -1,7 +1,8 @@
 import React from 'react';
-import {Text, View, StyleSheet, FlatList, ActivityIndicator} from 'react-native';
+import { View, StyleSheet, FlatList, ActivityIndicator, TouchableOpacity } from 'react-native';
 import { SplashScreen } from 'expo';
 import { Post } from '../components/Post';
+import Card from '../components/Card';
 
 const PER_PAGE = 20;
 
@@ -83,11 +84,17 @@ export default class PostsScreen extends React.Component {
 
     render(){
         return (
-            <View>
-                <FlatList 
+            <View style={styles.list}>
+                <FlatList
                     data={this.state.data}
                     renderItem={({ item }) => (
-                        <Post orgName={item['organization-name']} title={item.title} />
+                        <View style={styles.listCard}>
+                            <TouchableOpacity onPress={() => this.props.navigation.navigate('Details', item)}>
+                                <Card>
+                                    <Post orgName={item['organization-name']} title={item.title} creationDate = {getDate(item['creation-date'])} desc = {safeDescription(item['description'])} />
+                                </Card>
+                            </TouchableOpacity>
+                        </View>
                     )}
                     keyExtractor={(item) => item.UUID}
                     ItemSeparatorComponent={this.renderSeparator}
@@ -95,12 +102,28 @@ export default class PostsScreen extends React.Component {
                     refreshing={this.state.refreshing}
                     onRefresh={this.handleRefresh}
                     onEndReached={this.handleLoadMore}
-                    onEndReachedThreshold={0}
+                    onEndReachedThreshold={0.1}
                 />
             </View>
         )
     }
 
+}
+
+function getDate(dateString) {
+    let firstSplit = dateString.split(" ");
+
+    let dataArray = firstSplit[0].split("-");
+
+    return `${dataArray[1]}/${dataArray[2]}/${dataArray[0]}`;
+}
+
+function safeDescription(desc) {
+    if(desc.length <= 32) {
+        return desc;
+    } else {
+        return `${desc.substring(0, 32)}...`;
+    }
 }
 
 const styles = StyleSheet.create({
@@ -110,5 +133,10 @@ const styles = StyleSheet.create({
     
     footer: {
         paddingVertical: 20
+    },
+
+    listCard: {
+        flex: 1,
+        marginHorizontal: '10%'
     }
 });
