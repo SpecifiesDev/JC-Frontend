@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { StyleSheet,  ActivityIndicator, View, Text } from 'react-native';
-import { ScrollView, RectButton } from 'react-native-gesture-handler';
+import { ScrollView } from 'react-native-gesture-handler';
 import { SplashScreen } from 'expo';
 import { Organization } from '../components/Organization';
 import { IsolatedSearch } from '../components/IsolatedSearch';
@@ -11,89 +11,69 @@ const axios = require('axios');
 
 let organizationData;
 
-let elementData = [];
-let defaultArray = [];
 
 
 
+export default class DirectoryScreen extends React.Component {
 
-
-
-export default function DirectoryScreen(props) {
-  const [isLoadingComplete, setLoadingComplete] = React.useState(false);
-  const [elements, setElements] = React.useState();
   
+  constructor(props) {
+    super(props);
 
+    this.state = { isLoadingComplete: false, elements: [] }
+  }
 
+  componentDidMount() {
+    this.mount();
+  }
 
-  React.useEffect(() => {
-    async function loadResourcesAndDataAsync() {
-      try {
-        SplashScreen.preventAutoHide();
+  mount = async () => {
+    try {
+      SplashScreen.preventAutoHide();
+      console.log("hi");
+      let response = await axios.get('http://54.208.109.135/organizations');
+      organizationData = JSON.parse(JSON.stringify(response.data));
+      
+      let elementData = [];
+      for(let x = 0; x < organizationData['result'].length; x++) {
+        let organization = organizationData['result'][x];
 
-        // Load the organization data to display
+        let parent = organization['tags'][0]['parent'];
 
-        let response = await axios.get('http://54.208.109.135/organizations');
-        
-        
-
-        organizationData = JSON.parse(JSON.stringify(response.data));
-
-        
-        for(let x = 0; x < organizationData['result'].length; x++) {
-          let organization = organizationData['result'][x];
-
-          let parent = organization['tags'][0]['parent'];
-
-    
-          elementData.push(<Organization name = {organization['name']} position = {x} icon = {getIconByTag(parent)} description = {organization['description']} website = {organization['website']} phone = {organization['phone']} address = {organization['address']} key = {organization['UUID']}/>)
-        }
-        
-        defaultArray = elementData;
-        
-        setElements(elementData);
-        
-      } catch (e) {
-        
-        console.warn(e);
-      } finally {
-        setLoadingComplete(true);
-        SplashScreen.hide();
+  
+        elementData.push(<Organization name = {organization['name']} position = {x} icon = {getIconByTag(parent)} description = {organization['description']} website = {organization['website']} phone = {organization['phone']} address = {organization['address']} key = {organization['UUID']}/>)
       }
+      console.log("ez");
+      this.setState({isLoadingComplete: true, elements: elementData})
+      SplashScreen.hide();
+    } catch(e) {
+      console.log(e);
     }
-
-    loadResourcesAndDataAsync();
-  }, []);
-
-  function updateElements(arr) {
-    if(arr == null) arr = [];
-    setElements(arr);
   }
 
-  if(!isLoadingComplete && !props.skipLoadingScreen) {
-    return (
-        <ActivityIndicator style = {styles.spinnerStyle} size = "large" color = "#93ab99"/>
-    );
-  } else {
-
-
-
-    return (
-      <React.Fragment>
-        
-
-        <IsolatedSearch placeholder = "Search" updater = {updateElements} defaultArray = {defaultArray} orgData = {organizationData} getIconByTag = {getIconByTag}/>
-
-        <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
-          {elements}
-        </ScrollView>
-      </React.Fragment>
-    );
+  render() {
+    if(!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
+      return (
+          <ActivityIndicator style = {styles.spinnerStyle} size = "large" color = "#93ab99"/>
+      );
+    } else {
+  
+  
+  
+      return (
+        <React.Fragment>
+          
+  
+          <IsolatedSearch placeholder = "Search" navigator = {this.props.navigation.navigate} orgData = {organizationData} getIconByTag = {getIconByTag}/>
+  
+          <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+            {this.state.elements}
+          </ScrollView>
+        </React.Fragment>
+      );
+    }
   }
-
 }
-
-
 
 
 function getIconByTag(tagString) {
@@ -137,13 +117,13 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#fafafa',
   },
+  contentContainer: {
+    paddingTop: 15,
+  },
   spinnerStyle: {
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center'
-  },
-  contentContainer: {
-    paddingTop: 15,
   },
 
   option: {

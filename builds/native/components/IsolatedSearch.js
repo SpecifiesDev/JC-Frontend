@@ -1,8 +1,8 @@
 // We're isolating this component inside another component so the update handling can be done in its own state
 import React from 'react';
-import { TextInput } from 'react-native';
+import { TextInput, Text } from 'react-native';
 import { Organization } from '../components/Organization';
-import { ErrorMessage } from '../components/ErrorMessage.js';
+
 
 // Also I'm not implementing this just yet.
 
@@ -28,7 +28,7 @@ export class IsolatedSearch extends React.Component {
         let search = this.state.search;
         this.textInput.clear();
         if(search == '') {
-            this.props.updater(this.props.defaultArray);
+            
         } else {
                 for(let x = 0; x < this.props.orgData['result'].length; x++) {
 
@@ -54,9 +54,10 @@ export class IsolatedSearch extends React.Component {
                 }
 
                 if(returns == 0) {
-                    this.props.updater([<ErrorMessage message = "There are no organizations to display." key = {"error"}/>, this.props.defaultArray])
+                    this.props.navigator("DirectorySearch", <Text style = {{textAlign: 'center'}}>There were no organizations found.</Text>)
+                    
                 } else {
-                    this.props.updater(updatedArray);
+                    this.props.navigator("DirectorySearch", updatedArray);
                 }
 
                 
