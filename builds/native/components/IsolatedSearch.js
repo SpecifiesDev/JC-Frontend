@@ -53,11 +53,22 @@ export class IsolatedSearch extends React.Component {
 
                 }
 
+                updatedArray.sort((a, b) => {
+                    return a.props.name > b.props.name;
+                });
+                let newElementData = [];
+
+                let returnv = -1;
+                updatedArray.map((item) => {
+                  returns++;
+                  newElementData.push(<Organization name = {item.props.name} position = {returnv} icon = {item.props.icon} description = {item.props.description} website = {item.props.website} phone = {item.props.phone} address = {item.props.address} key = {returnv}/>)
+                });
+
                 if(returns == 0) {
                     this.props.navigator("DirectorySearch", <Text style = {{textAlign: 'center'}}>There were no organizations found.</Text>)
                     
                 } else {
-                    this.props.navigator("DirectorySearch", updatedArray);
+                    this.props.navigator("DirectorySearch", newElementData);
                 }
 
                 

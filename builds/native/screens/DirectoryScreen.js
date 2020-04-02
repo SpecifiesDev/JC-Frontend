@@ -30,7 +30,6 @@ export default class DirectoryScreen extends React.Component {
   mount = async () => {
     try {
       SplashScreen.preventAutoHide();
-      console.log("hi");
       let response = await axios.get('http://54.208.109.135/organizations');
       organizationData = JSON.parse(JSON.stringify(response.data));
       
@@ -43,8 +42,20 @@ export default class DirectoryScreen extends React.Component {
   
         elementData.push(<Organization name = {organization['name']} position = {x} icon = {getIconByTag(parent)} description = {organization['description']} website = {organization['website']} phone = {organization['phone']} address = {organization['address']} key = {organization['UUID']}/>)
       }
-      console.log("ez");
-      this.setState({isLoadingComplete: true, elements: elementData})
+      elementData.sort((a, b) => {
+        return a.props.name > b.props.name;
+      });
+
+      let newElementData = [];
+
+      let returns = -1;
+      // A method of editing the background displayed on each row. I tried directly editng the value per the documentation, but it never worked and this doesn't impact the load time
+      elementData.map((item) => {
+        returns++;
+        newElementData.push(<Organization name = {item.props.name} position = {returns} icon = {item.props.icon} description = {item.props.description} website = {item.props.website} phone = {item.props.phone} address = {item.props.address}/>)
+      });
+
+      this.setState({isLoadingComplete: true, elements: newElementData})
       SplashScreen.hide();
     } catch(e) {
       console.log(e);
