@@ -60,7 +60,7 @@ export class IsolatedSearch extends React.Component {
 
                 let returnv = -1;
                 updatedArray.map((item) => {
-                  returns++;
+                  returnv++;
                   newElementData.push(<Organization name = {item.props.name} position = {returnv} icon = {item.props.icon} description = {item.props.description} website = {item.props.website} phone = {item.props.phone} address = {item.props.address} key = {returnv}/>)
                 });
 

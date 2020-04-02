@@ -52,7 +52,7 @@ export default class DirectoryScreen extends React.Component {
       // A method of editing the background displayed on each row. I tried directly editng the value per the documentation, but it never worked and this doesn't impact the load time
       elementData.map((item) => {
         returns++;
-        newElementData.push(<Organization name = {item.props.name} position = {returns} icon = {item.props.icon} description = {item.props.description} website = {item.props.website} phone = {item.props.phone} address = {item.props.address}/>)
+        newElementData.push(<Organization name = {item.props.name} position = {returns} icon = {item.props.icon} description = {item.props.description} website = {item.props.website} phone = {item.props.phone} address = {item.props.address} key = {returns}/>)
       });
 
       this.setState({isLoadingComplete: true, elements: newElementData})
