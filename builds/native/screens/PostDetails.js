@@ -1,9 +1,9 @@
 import React from 'react';
-import { View, Text, StyleSheet, ScrollView } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, Button } from 'react-native';
 import Colors from '../constants/Colors';
 import { Ionicons, Foundation } from '@expo/vector-icons';
 
-export default function PostDetails({ route }){
+export default function PostDetails({ route, navigation }){
     return (
         <ScrollView>
             <View style={styles.containter}>
@@ -26,6 +26,11 @@ export default function PostDetails({ route }){
                                 return <Text key={index} style={styles.listItems}>{l}</Text>;
                             })}
                         </View>
+                        <Button
+                            onPress={() => navigation.navigate('Contact')}
+                            title="Contact"
+                            color="#28a745"
+                        />
                     </View>
                 </View>
             </View>

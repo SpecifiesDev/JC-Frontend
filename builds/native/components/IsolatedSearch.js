@@ -27,9 +27,10 @@ export class IsolatedSearch extends React.Component {
 
         let search = this.state.search;
         this.textInput.clear();
-        if(search == '') {
+        if(this.props.orgData != null){
+            if(search == '') {
             
-        } else {
+            } else {
                 for(let x = 0; x < this.props.orgData['result'].length; x++) {
 
                     let organization = this.props.orgData['result'][x];
@@ -60,8 +61,8 @@ export class IsolatedSearch extends React.Component {
 
                 let returnv = -1;
                 updatedArray.map((item) => {
-                  returnv++;
-                  newElementData.push(<Organization name = {item.props.name} position = {returnv} icon = {item.props.icon} description = {item.props.description} website = {item.props.website} phone = {item.props.phone} address = {item.props.address} key = {returnv}/>)
+                    returnv++;
+                    newElementData.push(<Organization name = {item.props.name} position = {returnv} icon = {item.props.icon} description = {item.props.description} website = {item.props.website} phone = {item.props.phone} address = {item.props.address} key = {returnv}/>)
                 });
 
                 if(returns == 0) {
@@ -70,11 +71,13 @@ export class IsolatedSearch extends React.Component {
                 } else {
                     this.props.navigator("DirectorySearch", newElementData);
                 }
-
-                
+            }
+        } else if(this.props.data != null) {
             
-
+        } else {
+            console.warn("Isolated Search does not have a prop of name orgName or data");
         }
+        
     };
 
     compareValues(string, comparison) {

@@ -3,6 +3,7 @@ import { View, StyleSheet, FlatList, ActivityIndicator, TouchableOpacity } from 
 import { SplashScreen } from 'expo';
 import { Post } from '../components/Post';
 import Card from '../components/Card';
+import { IsolatedSearch } from '../components/IsolatedSearch';
 
 const PER_PAGE = 20;
 
@@ -68,6 +69,12 @@ export default class PostsScreen extends React.Component {
         )
     }
 
+    renderHeader = () => {
+        return (
+            <IsolatedSearch placeholder="Search" data={this.state.data}/>
+        )
+    }
+
     handleRefresh = () => {
         this.setState({
             page: 0,
@@ -99,6 +106,7 @@ export default class PostsScreen extends React.Component {
                     keyExtractor={(item) => item.UUID}
                     ItemSeparatorComponent={this.renderSeparator}
                     ListFooterComponent={this.renderFooter}
+                    ListHeaderComponent={this.renderHeader}
                     refreshing={this.state.refreshing}
                     onRefresh={this.handleRefresh}
                     onEndReached={this.handleLoadMore}
