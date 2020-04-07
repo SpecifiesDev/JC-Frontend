@@ -33,7 +33,7 @@ export default class PostsScreen extends React.Component {
 
         let offset = (page * PER_PAGE).toString();
 
-        const url = 'http://54.208.109.135/posts?filter=1&amount=' + PER_PAGE + '&offset=' + offset;
+        const url = 'https://jacksonconnect.site/posts?filter=1&amount=' + PER_PAGE + '&offset=' + offset;
 
         this.setState({ loading: true });
 
