@@ -5,7 +5,7 @@ import { Post } from '../components/Post';
 import Card from '../components/Card';
 import { IsolatedSearch } from '../components/IsolatedSearch';
 
-const PER_PAGE = 20;
+const PER_PAGE = 30;
 
 export default class PostsScreen extends React.Component {
     constructor(props) {
@@ -34,7 +34,7 @@ export default class PostsScreen extends React.Component {
 
         let offset = (page * PER_PAGE).toString();
 
-        const url = 'http://54.208.109.135/posts?filter=1&amount=' + PER_PAGE + '&offset=' + offset;
+        const url = 'https://jacksonconnect.site/posts?filter=1&amount=' + PER_PAGE + '&offset=' + offset;
 
         this.setState({ loading: true });
 
@@ -52,6 +52,23 @@ export default class PostsScreen extends React.Component {
                 this.setState({refreshing: false, loading: false})
             })
     }
+
+    getDate = (dateString) => {
+        let firstSplit = dateString.split(" ");
+    
+        let dataArray = firstSplit[0].split("-");
+    
+        return `${dataArray[1]}/${dataArray[2]}/${dataArray[0]}`;
+    }
+    
+    safeDescription = (desc) => {
+        if(desc.length <= 32) {
+            return desc;
+        } else {
+            return `${desc.substring(0, 32)}...`;
+        }
+    }
+    
 
     renderSeparator = () => {
         return (
@@ -71,7 +88,7 @@ export default class PostsScreen extends React.Component {
 
     renderHeader = () => {
         return (
-            <IsolatedSearch placeholder="Search" data={this.state.data}/>
+            <IsolatedSearch placeholder="Search" data={this.state.data} navigator={this.props.navigation.navigate} getDate = {this.getDate} safeDescription = {this.safeDescription}/>
         )
     }
 
@@ -98,7 +115,7 @@ export default class PostsScreen extends React.Component {
                         <View style={styles.listCard}>
                             <TouchableOpacity onPress={() => this.props.navigation.navigate('Details', item)}>
                                 <Card>
-                                    <Post orgName={item['organization-name']} title={item.title} creationDate = {getDate(item['creation-date'])} desc = {safeDescription(item['description'])} />
+                                    <Post orgName={item['organization-name']} title={item.title} creationDate = {this.getDate(item['creation-date'])} desc = {this.safeDescription(item['description'])} />
                                 </Card>
                             </TouchableOpacity>
                         </View>
@@ -118,21 +135,6 @@ export default class PostsScreen extends React.Component {
 
 }
 
-function getDate(dateString) {
-    let firstSplit = dateString.split(" ");
-
-    let dataArray = firstSplit[0].split("-");
-
-    return `${dataArray[1]}/${dataArray[2]}/${dataArray[0]}`;
-}
-
-function safeDescription(desc) {
-    if(desc.length <= 32) {
-        return desc;
-    } else {
-        return `${desc.substring(0, 32)}...`;
-    }
-}
 
 const styles = StyleSheet.create({
     separator: {

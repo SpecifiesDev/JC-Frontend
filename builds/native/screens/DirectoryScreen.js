@@ -30,7 +30,7 @@ export default class DirectoryScreen extends React.Component {
   mount = async () => {
     try {
       SplashScreen.preventAutoHide();
-      let response = await axios.get('http://54.208.109.135/organizations');
+      let response = await axios.get('https://jacksonconnect.site/organizations');
       organizationData = JSON.parse(JSON.stringify(response.data));
       
       let elementData = [];

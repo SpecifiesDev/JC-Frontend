@@ -1,7 +1,9 @@
 // We're isolating this component inside another component so the update handling can be done in its own state
 import React from 'react';
-import { TextInput, Text } from 'react-native';
+import { TextInput, Text, View, TouchableOpacity } from 'react-native';
 import { Organization } from '../components/Organization';
+import Card from '../components/Card';
+import { Post } from '../components/Post';
 
 
 // Also I'm not implementing this just yet.
@@ -73,16 +75,58 @@ export class IsolatedSearch extends React.Component {
                 }
             }
         } else if(this.props.data != null) {
-            
+            if(search != ""){
+                let post;
+                let filteredData = [];
+                let data = this.props.data;
+
+                for(let i = 0; i < data.length; i++){
+
+                    post = data[i];
+
+                    if(this.compareValues(post['organization-name'], search)) {
+                        filteredData.push(post);
+                    }
+                    else if(this.compareValues(post['description'], search)) { 
+                        filteredData.push(post);
+                    }
+                    else if(this.compareValues(post['tags'], search)) {
+                        filteredData.push(post);
+                    } 
+                    else if (this.compareValues(post['title'], search)) {
+                        filteredData.push(post);
+                    }
+                }
+
+                for(let x = 0; x < filteredData.length; x++){
+                    post = filteredData[x];
+                    filteredData[x] = 
+                        <View style={{ flex: 1, marginHorizontal: '10%'}} key={post['UUID']}>
+                            <TouchableOpacity onPress={() => this.props.navigator('Details', post)}>
+                                <Card>
+                                    <Post orgName={post['organization-name']} title={post.title} creationDate = {this.props.getDate(post['creation-date'])} desc = {this.props.safeDescription(post['description'])} />
+                                </Card>
+                            </TouchableOpacity>
+                        </View>;
+                }
+
+                if(filteredData.length == 0) {
+                    this.props.navigator("Search Results", <Text style = {{textAlign: 'center'}}>There were no posts found. Consider scrolling down further before searching...</Text>)
+                    
+                } else {
+                    this.props.navigator("Search Results", filteredData);
+                }
+                
+            }
         } else {
             console.warn("Isolated Search does not have a prop of name orgName or data");
         }
         
-    };
+    }
 
     compareValues(string, comparison) {
         
-        return String(string).includes(comparison);
+        return String(string).toLowerCase().includes(comparison.toLowerCase());
     }
 
     newOrganization(name, position, description, website, phone, address, uuid, parent) {
