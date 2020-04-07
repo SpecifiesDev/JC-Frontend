@@ -5,25 +5,27 @@ import { Post } from '../components/Post';
 import Card from '../components/Card';
 import { IsolatedSearch } from '../components/IsolatedSearch';
 
-const PER_PAGE = 30;
 
 export default class PostsScreen extends React.Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            loading: false,
-            page: 0,
+            loading: true,
+            page: 1,
             refreshing: false,
             data: []
         };
 
+        this.PER_PAGE = 30;
+        this.totalAmount = 0;
+        this.maxPage = 0;
     }
 
     componentDidMount() {
         SplashScreen.preventAutoHide();
       
-        this.getData();
+        this.getAmount();
 
         SplashScreen.hide();
     }
@@ -32,17 +34,19 @@ export default class PostsScreen extends React.Component {
     getData = () => {
         const { page } = this.state;
 
-        let offset = (page * PER_PAGE).toString();
+        let offset = (this.totalAmount - (page * this.PER_PAGE)).toString();
+        let url = 'https://jacksonconnect.site/posts?filter=1&amount=' + this.PER_PAGE + '&offset=' + offset;
 
-        const url = 'https://jacksonconnect.site/posts?filter=1&amount=' + PER_PAGE + '&offset=' + offset;
-
-        this.setState({ loading: true });
+        if(offset < 0){
+            let amount = this.PER_PAGE + parseInt(offset);
+            url = 'https://jacksonconnect.site/posts?filter=1&amount=' + amount.toString() + '&offset=0';
+        }
 
         fetch(url)
             .then(res => res.json())
             .then(res => {
                 this.setState({
-                    data: page == 0 ? res.result : this.state.data.concat(res.result),
+                    data: page == 1 ? res.result.reverse() : this.state.data.concat(res.result.reverse()),
                     loading: false,
                     refreshing: false
                 })
@@ -50,6 +54,21 @@ export default class PostsScreen extends React.Component {
             .catch(err => {
                 console.warn(err);
                 this.setState({refreshing: false, loading: false})
+            })
+    }
+
+    getAmount = () => {
+        const url = 'https://jacksonconnect.site/postamount?filter=1';
+
+        fetch(url)
+            .then(res => res.json())
+            .then(res => {
+                this.totalAmount = res.amount;
+                this.maxPage = Math.ceil(this.totalAmount / this.PER_PAGE);
+                this.getData();
+            })
+            .catch(err => {
+                console.warn(err);
             })
     }
 
@@ -94,16 +113,18 @@ export default class PostsScreen extends React.Component {
 
     handleRefresh = () => {
         this.setState({
-            page: 0,
+            page: 1,
             refreshing: true
-        }, () => this.getData());
+        }, () => this.getAmount());
     }
 
     handleLoadMore = () => {
-        this.setState({
-            loading: true,
-            page: this.state.page + 1,
-        }, () => this.getData());
+        if((this.state.page < this.maxPage) && (this.state.loading != true)){
+            this.setState({
+                loading: true,
+                page: this.state.page + 1,
+            }, () => this.getData());
+        }
     }
 
     render(){
