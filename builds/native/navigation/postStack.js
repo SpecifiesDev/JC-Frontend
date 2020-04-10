@@ -13,7 +13,7 @@ export default function PostStack() {
         <postStack.Navigator initialRouteName="Posts">
             <postStack.Screen name="Posts" component={PostsScreen}/>
             <postStack.Screen name="Details" component={PostDetails} options={{title: ''}}/>
-            <postStack.Screen name="Contact" component={Contact}/>
+            <postStack.Screen name="Contact" component={Contact} options={{title: ''}}/>
             <postStack.Screen name="Search Results" component={Results}/>
         </postStack.Navigator>
     )

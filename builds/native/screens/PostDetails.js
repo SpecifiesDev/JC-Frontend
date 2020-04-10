@@ -26,11 +26,13 @@ export default function PostDetails({ route, navigation }){
                                 return <Text key={index} style={styles.listItems}>{l}</Text>;
                             })}
                         </View>
-                        <Button
-                            onPress={() => navigation.navigate('Contact')}
-                            title="Contact"
-                            color="#28a745"
-                        />
+                        <View style={{margin: 20}}>
+                            <Button
+                                onPress={() => navigation.navigate('Contact', route.params['organization-uuid'])}
+                                title="Contact"
+                                color="#28a745"
+                            />
+                        </View>
                     </View>
                 </View>
             </View>
