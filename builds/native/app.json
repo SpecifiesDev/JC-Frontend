@@ -1,8 +1,7 @@
 {
   "expo": {
     "name": "JC Frontend",
-    "slug": "frontend",
-    "privacy": "public",
+    "slug": "jacksonconnecttest",
     "sdkVersion": "36.0.0",
     "platforms": [
       "ios",
@@ -24,7 +23,13 @@
       "**/*"
     ],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "site.jacksonconnect.ios",
+      "buildNumber": "1.0.0"
+    },
+    "android": {
+      "package": "site.jacksonconnect.android",
+      "versionCode": 1
     }
   }
 }
