@@ -4,25 +4,18 @@ import { Text, View, StyleSheet, ScrollView, TextInput, TouchableOpacity } from 
 
 export default function Contact({ route }){
     const [uemail, onChangeEmail] = React.useState('');
-    const [fsubject, onChangeSubject] = React.useState('');
     const [fbody, onChangeBody] = React.useState('');
     const [feedback, changeFeedback] = React.useState('Please input information into the fields below 😊');
 
     const url = 'https://jacksonconnect.site/contactsend';
 
+
     const handleSubmit = () => {
-        if(uemail.length <= 5) {
-            changeFeedback('Your email needs to be longer than 5 characters 🤷');
-            return;
-        }
 
-        if(!uemail.includes('@')) {
+        const reg = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+
+        if(!reg.test(uemail)) {
             changeFeedback('Invalid Email... 😞');
-            return;
-        }
-
-        if(fsubject.length <= 0) {
-            changeFeedback('Please input an Email Subject... 😇');
             return;
         }
 
@@ -33,12 +26,19 @@ export default function Contact({ route }){
 
         changeFeedback('');
 
+
+        console.log("good so far");
+
         let send = {
             email: uemail,
-            uuid: route.params,
-            subject: fsubject,
+            UUID: route.params['organization-uuid'],
+            postUUID: route.params['UUID'],
             body: fbody
         }
+
+        // console.log(route.params)
+
+        // console.log(JSON.stringify(send));
 
         fetch(url, {
             method: 'POST',
@@ -47,16 +47,20 @@ export default function Contact({ route }){
             },
             body: JSON.stringify(send)
         })
-            // .then(res => res.json())         # I need austin to implement the response before I can get the resonse
+            .then(res => res.json())
             .then(data => {
-                console.log('sent');
-                changeFeedback('Email Sent');
-                onChangeEmail('');
-                onChangeSubject('');
-                onChangeBody('');
+                // console.log(data);
+                if(data.success == true){
+                    changeFeedback(data.message);
+                    onChangeEmail('');
+                    onChangeBody('');
+                } else {
+                    changeFeedback(data.message);
+                }
             })
             .catch(err => {
                 console.warn(err);
+                changeFeedback('Unable to contact Server... Email not sent!');
             })
 
     }
@@ -85,18 +89,8 @@ export default function Contact({ route }){
                         textContentType={"emailAddress"}
                     />
                 </View>
-                <View style={styles.subjectSection}>
-                    <Text style={styles.text}>Subject:</Text>
-                    <TextInput
-                        style={styles.subjectInput}
-                        onChangeText={text => onChangeSubject(text)}
-                        value={fsubject}
-                        blurOnSubmit={true}
-                        maxLength={48}
-                    />
-                </View>
                 <View style={styles.bodySection}>
-                    <Text style={styles.text}>Body:</Text>
+                    <Text style={styles.text}>Email Body:</Text>
                     <View style={styles.centerer}>
                         <TextInput
                             style={styles.bodyInput}
@@ -156,13 +150,6 @@ const styles = StyleSheet.create({
         marginBottom: 20
     },
 
-    subjectSection: {
-        flex: 1,
-        flexDirection: 'row',
-        justifyContent: 'center',
-        alignItems: 'center'
-    },
-
     bodySection: {
         flex: 1
     },
@@ -180,15 +167,6 @@ const styles = StyleSheet.create({
         padding: 8,
         margin: 10,
         width: 225
-    },
-
-    subjectInput: {
-        borderWidth: 1,
-        borderRadius: 5,
-        borderColor: '#5db370',
-        padding: 8,
-        margin: 10,
-        width: 250
     },
 
     bodyInput: {

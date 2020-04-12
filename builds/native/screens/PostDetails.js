@@ -28,7 +28,7 @@ export default function PostDetails({ route, navigation }){
                         </View>
                         <View style={{margin: 20}}>
                             <Button
-                                onPress={() => navigation.navigate('Contact', route.params['organization-uuid'])}
+                                onPress={() => navigation.navigate('Contact', route.params)}
                                 title="Contact"
                                 color="#28a745"
                             />
