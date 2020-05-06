@@ -9,7 +9,7 @@ const dirStack = createStackNavigator();
 export default function DirStack() {
     return (
         <dirStack.Navigator>
-            <dirStack.Screen name="Directory" component={DirectoryScreen}/>
+            <dirStack.Screen name = "Directory" component={DirectoryScreen}/>
             <dirStack.Screen name = "DirectorySearch" component = {SearchedItems} options = {{title: ''}}/>
         </dirStack.Navigator>
     )
