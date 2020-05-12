@@ -37,7 +37,13 @@ export default class DirectoryScreen extends React.Component {
       for(let x = 0; x < organizationData['result'].length; x++) {
         let organization = organizationData['result'][x];
 
-        let parent = organization['tags'][0]['parent'];
+        let parent;
+      
+        if(organization['tags'][0] != undefined) {
+          parent = organization['tags'][0]['parent'];
+        } else {
+          parent = 'N/A';
+        }
 
   
         elementData.push(<Organization name = {organization['name']} position = {x} icon = {getIconByTag(parent)} description = {organization['description']} website = {organization['website']} phone = {organization['phone']} address = {organization['address']} key = {organization['UUID']}/>)

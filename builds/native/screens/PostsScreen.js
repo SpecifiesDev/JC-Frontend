@@ -169,5 +169,9 @@ const styles = StyleSheet.create({
     listCard: {
         flex: 1,
         marginHorizontal: '10%'
+    },
+
+    list: {
+        flex: 1
     }
 });

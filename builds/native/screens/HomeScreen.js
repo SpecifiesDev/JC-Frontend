@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet, Text, ScrollView, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, ScrollView, View, TouchableOpacity, Image } from 'react-native';
 
 export default function HomeScreen({ navigation }) {
   return (
@@ -23,8 +23,14 @@ export default function HomeScreen({ navigation }) {
             <Text style={{color: '#fff', fontSize: 18}}>Check out our Posts page!</Text>
           </TouchableOpacity>
         </View>
-        
 
+        <Text style={{fontSize: 23, fontWeight: '600', textAlign: 'center'}}>Sponsors:</Text>
+
+        <View style={styles.sponsors}>
+          <Image style={{width: 130, height: 100, resizeMode: 'stretch'}} source={require('../assets/images/northeastgahealth.jpg')} />
+          <Image style={{width: 200, height: 60, resizeMode: 'stretch'}} source={require('../assets/images/piedmontathens.png')} />
+        </View>
+        
       </ScrollView>
   );
 }
@@ -33,7 +39,6 @@ export default function HomeScreen({ navigation }) {
 const styles = StyleSheet.create({
 
   contentContainer: {
-    flex: 1,
     marginVertical: 20,
     marginHorizontal: 30,
   },
@@ -78,5 +83,12 @@ const styles = StyleSheet.create({
     backgroundColor: '#28a745',
     marginTop: 10,
     marginBottom: 20
+  },
+
+  sponsors: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginVertical: 15
   }
 });
