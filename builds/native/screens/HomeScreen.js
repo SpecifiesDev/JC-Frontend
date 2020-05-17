@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
 
   contentContainer: {
     marginVertical: 20,
-    marginHorizontal: 30,
+    marginHorizontal: 20,
   },
 
   head: {
@@ -63,7 +63,6 @@ const styles = StyleSheet.create({
   },
 
   buttons: {
-    marginHorizontal: 35,
     marginBottom: 50,
     justifyContent: 'space-between',
     alignItems: 'center'
