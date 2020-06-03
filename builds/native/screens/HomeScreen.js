@@ -15,8 +15,9 @@ export default function HomeScreen() {
       <Text style={{ fontSize: 23, fontWeight: '600', textAlign: 'center' }}>Sponsors:</Text>
 
       <View style={styles.sponsors}>
-        <Image style={{ width: 130, height: 100 }} resizeMode={"contain"} source={require('../assets/images/northeastgahealth.jpg')} />
-        <Image style={{ width: 200, height: 60, marginTop: 30 }} resizeMode={"contain"} source={require('../assets/images/piedmontathens.png')} />
+        <Image style={{ width: 200, height: 100, tintColor: '#9e9e9e' }} resizeMode={"contain"} source={require('../assets/images/BraseltonVisitorsBureau.png')} />
+        <Image style={{ width: 180, height: 140 }} resizeMode={"contain"} source={require('../assets/images/NGHSLogo.png')} />
+        <Image style={{ width: 230, height: 120 }} resizeMode={"contain"} source={require('../assets/images/piedmontathens.png')} />
       </View>
 
     </ScrollView>
