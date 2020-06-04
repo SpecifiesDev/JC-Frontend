@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { StyleSheet,  ActivityIndicator, View, Text } from 'react-native';
+import { StyleSheet, ActivityIndicator, Text } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import { SplashScreen } from 'expo';
 import { Organization } from '../components/Organization';
@@ -16,11 +16,11 @@ let organizationData;
 
 export default class DirectoryScreen extends React.Component {
 
-  
+
   constructor(props) {
     super(props);
 
-    this.state = { isLoadingComplete: false, elements: [] }
+    this.state = { isLoadingComplete: false, elements: [], maintenence: false, failedLoading: false };
   }
 
   componentDidMount() {
@@ -30,23 +30,27 @@ export default class DirectoryScreen extends React.Component {
   mount = async () => {
     try {
       SplashScreen.preventAutoHide();
-      let response = await axios.get('https://jacksonconnect.site/organizations');
+      let response = await axios.get('https://jacksonconnect.site/organizations', { timeout: 30000 }).catch((err) => this.setState({ failedLoading: true, isLoadingComplete: true }));
+      if (this.state.failedLoading) {
+        return;
+      }
+
       organizationData = JSON.parse(JSON.stringify(response.data));
-      
+
       let elementData = [];
-      for(let x = 0; x < organizationData['result'].length; x++) {
+      for (let x = 0; x < organizationData['result'].length; x++) {
         let organization = organizationData['result'][x];
 
         let parent;
-      
-        if(organization['tags'][0] != undefined) {
+
+        if (organization['tags'][0] != undefined) {
           parent = organization['tags'][0]['parent'];
         } else {
           parent = 'N/A';
         }
 
-  
-        elementData.push(<Organization name = {organization['name']} position = {x} icon = {getIconByTag(parent)} description = {organization['description']} website = {organization['website']} phone = {organization['phone']} address = {organization['address']} key = {organization['UUID']}/>)
+
+        elementData.push(<Organization name={organization['name']} position={x} icon={getIconByTag(parent)} description={organization['description']} website={organization['website']} phone={organization['phone']} address={organization['address']} key={organization['UUID']} />)
       }
       elementData.sort((a, b) => {
         return a.props.name > b.props.name;
@@ -58,35 +62,47 @@ export default class DirectoryScreen extends React.Component {
       // A method of editing the background displayed on each row. I tried directly editng the value per the documentation, but it never worked and this doesn't impact the load time
       elementData.map((item) => {
         returns++;
-        newElementData.push(<Organization name = {item.props.name} position = {returns} icon = {item.props.icon} description = {item.props.description} website = {item.props.website} phone = {item.props.phone} address = {item.props.address} key = {returns}/>)
+        newElementData.push(<Organization name={item.props.name} position={returns} icon={item.props.icon} description={item.props.description} website={item.props.website} phone={item.props.phone} address={item.props.address} key={returns} />)
       });
 
-      this.setState({isLoadingComplete: true, elements: newElementData})
+      this.setState({ isLoadingComplete: true, elements: newElementData })
       SplashScreen.hide();
-    } catch(e) {
+    } catch (e) {
       console.log(e);
     }
   }
 
   render() {
-    if(!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
+    if (!this.state.isLoadingComplete && !this.props.skipLoadingScreen) {
       return (
-          <ActivityIndicator style = {styles.spinnerStyle} size = "large" color = "#93ab99"/>
+        <ActivityIndicator style={styles.spinnerStyle} size="large" color="#93ab99" />
+      );
+    } else if (this.state.maintenence) {
+      return (
+        <>
+          <Text style={{ textAlign: 'center', marginTop: 100 }}>The application is currently under maintenence...</Text>
+          <Text style={{ textAlign: 'center' }}>Please check back later.</Text>
+        </>
+      );
+    } else if (this.state.failedLoading) {
+      return (
+        <>
+          <Text style={{ textAlign: 'center', marginTop: 100 }}>The application wasn't able to load data</Text>
+          <Text style={{ textAlign: 'center' }}>Request timed out...</Text>
+          <Text style={{ textAlign: 'center', marginTop: 100 }}>Reload app or come back later...</Text>
+        </>
       );
     } else {
-  
-  
-  
       return (
-        <React.Fragment>
-          
-  
-          <IsolatedSearch placeholder = "Search" navigator = {this.props.navigation.navigate} orgData = {organizationData} getIconByTag = {getIconByTag}/>
-  
+        <React.Fragment >
+
+
+          <IsolatedSearch placeholder="Search" navigator={this.props.navigation.navigate} orgData={organizationData} getIconByTag={getIconByTag} />
+
           <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
             {this.state.elements}
           </ScrollView>
-        </React.Fragment>
+        </React.Fragment >
       );
     }
   }
@@ -95,7 +111,7 @@ export default class DirectoryScreen extends React.Component {
 
 function getIconByTag(tagString) {
 
-  switch(tagString) {
+  switch (tagString) {
 
     case 'Shelter':
       return 'md-home';
