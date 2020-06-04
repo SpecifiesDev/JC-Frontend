@@ -12,7 +12,7 @@ export default class PostsScreen extends React.Component {
         super(props);
 
         this.state = {
-            // loading: true,
+            loading: true,
             // page: 1,
             refreshing: false,
             data: [],
@@ -52,12 +52,13 @@ export default class PostsScreen extends React.Component {
                     data: res.result.reverse(),
                     // loading: false,
                     refreshing: false,
-                    failedLoading: false
+                    failedLoading: false,
+                    loading: false
                 })
             })
             .catch(err => {
                 console.warn(err);
-                this.setState({ refreshing: false, failedLoading: true, /* loading: false */ })
+                this.setState({ refreshing: false, failedLoading: true, loading: false });
             })
     }
 
@@ -99,15 +100,15 @@ export default class PostsScreen extends React.Component {
         )
     }
 
-    // renderFooter = () => {
-    //     if (!this.state.loading) return null;
+    renderFooter = () => {
+        if (!this.state.loading) return null;
 
-    //     return (
-    //         <View style={styles.footer}>
-    //             <ActivityIndicator size="large" color="#93ab99" />
-    //         </View>
-    //     )
-    // }
+        return (
+            <View style={styles.footer}>
+                <ActivityIndicator size="large" color="#93ab99" />
+            </View>
+        )
+    }
 
     renderHeader = () => {
         return (
@@ -156,7 +157,7 @@ export default class PostsScreen extends React.Component {
                         )}
                         keyExtractor={(item) => item.UUID}
                         ItemSeparatorComponent={this.renderSeparator}
-                        // ListFooterComponent={this.renderFooter}
+                        ListFooterComponent={this.renderFooter}
                         ListHeaderComponent={this.renderHeader}
                         refreshing={this.state.refreshing}
                         onRefresh={this.handleRefresh}
