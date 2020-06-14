@@ -47,14 +47,18 @@ export default class PostsScreen extends React.Component {
         axios.get(url, { timeout: 30000 })
             .then(res => JSON.parse(JSON.stringify(res.data)))
             .then(res => {
-                this.setState({
-                    // data: page == 1  ?  res.result.reverse() : this.state.data.concat(res.result.reverse()),
-                    data: res.result.reverse(),
-                    // loading: false,
-                    refreshing: false,
-                    failedLoading: false,
-                    loading: false
-                })
+                if (res.result.length == 0) {
+                    this.setState({ failedLoading: true, refreshing: false, loading: false });
+                } else {
+                    this.setState({
+                        // data: page == 1  ?  res.result.reverse() : this.state.data.concat(res.result.reverse()),
+                        data: res.result.reverse(),
+                        // loading: false,
+                        refreshing: false,
+                        failedLoading: false,
+                        loading: false
+                    })
+                }
             })
             .catch(err => {
                 console.warn(err);
@@ -135,11 +139,25 @@ export default class PostsScreen extends React.Component {
     render() {
         if (this.state.failedLoading) {
             return (
-                <>
-                    <Text style={{ textAlign: 'center', marginTop: 100 }}>The application wasn't able to load data</Text>
-                    <Text style={{ textAlign: 'center' }}>Request timed out...</Text>
-                    <Text style={{ textAlign: 'center', marginTop: 100 }}>Reload app or come back later...</Text>
-                </>
+                <FlatList
+                    data={[""]}
+                    renderItem={() => (
+                        <>
+                            <Text style={{ textAlign: 'center', marginTop: 100 }}>The application wasn't able to load data</Text>
+                            <Text style={{ textAlign: 'center' }}>Request timed out...</Text>
+                            <Text style={{ textAlign: 'center', marginTop: 50 }}>Refresh or come back later...</Text>
+                        </>
+                    )}
+                    keyExtractor={(index) => index}
+                    refreshing={this.state.refreshing}
+                    onRefresh={this.handleRefresh}
+
+                />
+                // <>
+                //     <Text style={{ textAlign: 'center', marginTop: 100 }}>The application wasn't able to load data</Text>
+                //     <Text style={{ textAlign: 'center' }}>Request timed out...</Text>
+                //     <Text style={{ textAlign: 'center', marginTop: 50 }}>Reload app or come back later...</Text>
+                // </>
             );
         } else {
             return (
